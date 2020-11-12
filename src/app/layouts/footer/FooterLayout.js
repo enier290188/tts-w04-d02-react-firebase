@@ -8,7 +8,7 @@ class FooterLayout extends React.Component {
                 <div className="container">
                     <div className="row">
                         <div id="app-footer-center" className="col-12 border border-white bg-white">
-                            <p className="m-0 p-3 text-center text-muted">Copyright &copy; 2020, <DiReact size="1em"/>REACT-FIREBASE<DiFirebase size="1em"/>.</p>
+                            <p className="m-0 p-3 text-center text-muted">Copyright &copy; 2020, <DiReact size="1em"/>REACT+FIREBASE<DiFirebase size="1em"/>.</p>
                         </div>
                     </div>
                 </div>

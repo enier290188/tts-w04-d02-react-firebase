@@ -33,13 +33,14 @@ class ChatView extends React.Component {
                                     }
                                     {
                                         this.state.chats.map(chat => {
-                                            if (this.state.user.email === chat.userEmail) {
+                                            if (this.state.user.uid === chat.userID) {
                                                 return (
                                                     <div key={chat.chatID} className="row">
                                                         <div className="offset-4 col-8">
                                                             <div className="m-0 mb-2 alert alert-success fade show" role="alert">
-                                                                <p className="m-0 p-0 text-center font-weight-bolder border-bottom border-success">{this.state.user.email}</p>
-                                                                <p className="m-0 p-0 pt-1 text-left">{chat.content}</p>
+                                                                <p className="m-0 p-0 text-center font-weight-bolder">{(new Date(chat.chatID)).getMonth()}/{(new Date(chat.chatID)).getDate()}/{(new Date(chat.chatID)).getFullYear()} ({(new Date(chat.chatID)).getHours()}:{(new Date(chat.chatID)).getMinutes()}:{(new Date(chat.chatID)).getSeconds()})</p>
+                                                                <p className="m-0 p-0 text-center font-weight-bolder border-bottom border-success">{this.state.user.displayName}</p>
+                                                                <p className="m-0 p-0 py-3 text-center font-italic">{chat.content}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -49,8 +50,9 @@ class ChatView extends React.Component {
                                                     <div key={chat.chatID} className="row">
                                                         <div className="col-8">
                                                             <div className="m-0 mb-2 alert alert-info fade show" role="alert">
-                                                                <p className="m-0 p-0 text-center font-weight-bolder border-bottom border-info">{chat.userEmail}</p>
-                                                                <p className="m-0 p-0 pt-1 text-left">{chat.content}</p>
+                                                                <p className="m-0 p-0 text-center font-weight-bolder">{(new Date(chat.chatID)).getMonth()}/{(new Date(chat.chatID)).getDate()}/{(new Date(chat.chatID)).getFullYear()} ({(new Date(chat.chatID)).getHours()}:{(new Date(chat.chatID)).getMinutes()}:{(new Date(chat.chatID)).getSeconds()})</p>
+                                                                <p className="m-0 p-0 text-center font-weight-bolder border-bottom border-info">{chat.userDisplayName}</p>
+                                                                <p className="m-0 p-0 py-3 text-center font-italic">{chat.content}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -61,13 +63,12 @@ class ChatView extends React.Component {
                                 </div>
                                 <div className="d-flex flex-row justify-content-start align-items-center mt-4 mr-0 mb-0 ml-0 pt-2 pr-0 pb-0 pl-0 border-top border-muted">
                                     <div className="input-group m-0 px-5 py-3">
-                                        <input value={this.state.content} onChange={this.handleChange} type="text" name="content" className="form-control" placeholder="-message-" autoComplete="off" aria-describedby="buttonSend" required/>
+                                        <input value={this.state.content} onChange={this.handleChange} type="text" name="content" className="form-control" placeholder="-message-" autoComplete="off" aria-describedby="buttonSend" autoFocus required/>
                                         <div className="input-group-append">
                                             <button type="submit" id="buttonSend" className="btn btn-primary d-flex flex-row justify-content-start align-items-center"><FaComment size="1.2em"/><span className="m-0 ml-1 p-0">Send</span></button>
                                         </div>
                                     </div>
                                 </div>
-
                             </form>
                         </div>
                     </div>
@@ -112,7 +113,7 @@ class ChatView extends React.Component {
             await firebaseApp.database().ref("chats").push({
                 chatID: Date.now(),
                 userID: this.state.user.uid,
-                userEmail: this.state.user.email,
+                userDisplayName: this.state.user.displayName,
                 content: this.state.content,
             });
             this.setState({

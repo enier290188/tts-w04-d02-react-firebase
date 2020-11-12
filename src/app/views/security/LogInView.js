@@ -32,7 +32,7 @@ class LogInView extends React.Component {
                                 }
                                 <div className="form-group">
                                     <label htmlFor="email" className="font-weight-bolder">Email:</label>
-                                    <input value={this.state.email} onChange={this.handleChange} type="email" name="email" className="form-control" placeholder="-Email-" autoComplete="off" required/>
+                                    <input value={this.state.email} onChange={this.handleChange} type="email" name="email" className="form-control" placeholder="-Email-" autoComplete="off" autoFocus required/>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="password" className="font-weight-bolder">Password:</label>

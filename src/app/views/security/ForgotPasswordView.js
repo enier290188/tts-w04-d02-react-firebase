@@ -11,6 +11,7 @@ class ForgotPasswordView extends React.Component {
         this.state = {
             error: null,
             email: "",
+            isSendEmail: false,
         };
     }
 
@@ -29,17 +30,29 @@ class ForgotPasswordView extends React.Component {
                                         </div>
                                     ) : null
                                 }
-                                <div className="form-group">
-                                    <label htmlFor="email" className="font-weight-bolder">Email:</label>
-                                    <input value={this.state.email} onChange={this.handleChange} type="email" name="email" className="form-control" placeholder="-Email-" autoComplete="off" required/>
-                                </div>
-                                <div className="d-flex flex-row justify-content-start align-items-center mt-4 mr-0 mb-0 ml-0 pt-2 pr-0 pb-0 pl-0 border-top border-muted">
-                                    <button type="submit" className="btn btn-primary d-flex flex-row justify-content-start align-items-center"><FaLockOpen/><span className="m-0 ml-1 p-0">Send email for reset password</span></button>
-                                    <button type="button" className="btn btn-outline-success d-flex flex-row justify-content-start align-items-center ml-1" onClick={this.handleReset}><FaSync/><span className="m-0 ml-1 p-0">Reset</span></button>
-                                </div>
-                                <div className="d-flex flex-row justify-content-end align-items-center mt-0 mr-0 mb-0 ml-0 pt-2 pr-0 pb-0 pl-0">
-                                    <button type="button" className="btn btn-link d-flex flex-row justify-content-start align-items-center ml-1" onClick={this.handleLogIn}><FaSignInAlt/><span className="m-0 ml-1 p-0">Log in</span></button>
-                                </div>
+                                {
+                                    (this.state.isSendEmail) ? (
+                                        <React.Fragment>
+                                            <div className="m-0 mb-2 alert alert-info fade show" role="alert">
+                                                <p className="m-0 p-0 text-left">It was sended an email with a link to verify your email address.</p>
+                                            </div>
+                                        </React.Fragment>
+                                    ) : (
+                                        <React.Fragment>
+                                            <div className="form-group">
+                                                <label htmlFor="email" className="font-weight-bolder">Email:</label>
+                                                <input value={this.state.email} onChange={this.handleChange} type="email" name="email" className="form-control" placeholder="-Email-" autoComplete="off" autoFocus required/>
+                                            </div>
+                                            <div className="d-flex flex-row justify-content-start align-items-center mt-4 mr-0 mb-0 ml-0 pt-2 pr-0 pb-0 pl-0 border-top border-muted">
+                                                <button type="submit" className="btn btn-primary d-flex flex-row justify-content-start align-items-center"><FaLockOpen/><span className="m-0 ml-1 p-0">Send email for reset password</span></button>
+                                                <button type="button" className="btn btn-outline-success d-flex flex-row justify-content-start align-items-center ml-1" onClick={this.handleReset}><FaSync/><span className="m-0 ml-1 p-0">Reset</span></button>
+                                            </div>
+                                            <div className="d-flex flex-row justify-content-end align-items-center mt-0 mr-0 mb-0 ml-0 pt-2 pr-0 pb-0 pl-0">
+                                                <button type="button" className="btn btn-link d-flex flex-row justify-content-start align-items-center ml-1" onClick={this.handleLogIn}><FaSignInAlt/><span className="m-0 ml-1 p-0">Log in</span></button>
+                                            </div>
+                                        </React.Fragment>
+                                    )
+                                }
                             </form>
                         </div>
                     </div>
@@ -59,15 +72,20 @@ class ForgotPasswordView extends React.Component {
         this.setState({
             error: null,
         });
-        try {
-            await firebaseApp.auth().sendPasswordResetEmail(this.state.email);
-            this.props.history.push(URL_SECURITY_LOGIN);
-        } catch (error) {
+        await firebaseApp.auth().sendPasswordResetEmail(this.state.email).then(() => {
+            // Email sent.
+            this.setState({
+                isSendEmail: true,
+            });
+            setTimeout(() => {
+                this.props.history.push(URL_SECURITY_LOGIN, "");
+            }, 5000);
+        }).catch(error => {
             this.setState({
                 error: error.message,
                 email: "",
             });
-        }
+        });
     }
 
     handleReset = (event) => {
