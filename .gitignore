@@ -1,0 +1,20 @@
+# IDE
+/.idea/
+
+# dependencies
+/node_modules/
+
+# testing
+/coverage/
+
+# production
+/build/
+
+# env
+.env
+
+# firebase
+/.firebase/
+.firebaserc
+database.rules.json
+firebase.json
