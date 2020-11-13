@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap";
-import React from "react";
+import React, {useState, useEffect} from "react";
 import ReactDOM from "react-dom";
 import {HashRouter} from "react-router-dom";
 import {Routes} from "./app/routers/routes";
@@ -8,44 +8,35 @@ import LoadingLayout from "./app/layouts/loading/LoadingLayout";
 import HeaderLayout from "./app/layouts/header/HeaderLayout";
 import FooterLayout from "./app/layouts/footer/FooterLayout";
 import {firebaseApp} from "./app/services/firebase";
+import {UserProvider} from "./app/contexts/contexts";
 
-class App extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: null,
-            loading: true,
-        };
-    }
+const App = () => {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    render() {
-        return (
-            (this.state.loading === true) ? (
-                <LoadingLayout/>
-            ) : (
-                <React.Fragment>
-                    <HeaderLayout user={this.state.user}/>
-                    <Routes user={this.state.user}/>
-                    <FooterLayout/>
-                </React.Fragment>
-            ));
-    }
-
-    componentDidMount() {
+    useEffect(() => {
         firebaseApp.auth().onAuthStateChanged((user) => {
             if (user) {
-                this.setState({
-                    user: user,
-                    loading: false,
-                });
+                setUser(user);
+                setLoading(false);
             } else {
-                this.setState({
-                    user: null,
-                    loading: false,
-                });
+                setUser(null);
+                setLoading(false);
             }
         });
-    }
+    })
+
+    return (
+        loading ? (
+            <LoadingLayout/>
+        ) : (
+            <UserProvider value={user}>
+                <HeaderLayout/>
+                <Routes/>
+                <FooterLayout/>
+            </UserProvider>
+        )
+    );
 }
 
 ReactDOM.render(

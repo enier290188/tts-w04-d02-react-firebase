@@ -15,15 +15,15 @@ export const URL_SECURITY_FORGOTPASSWORD = "/forgot-password/";
 export const URL_SECURITY_LOGIN = "/log-in/";
 export const URL_SECURITY_LOGOUT = "/log-out/";
 
-export const Routes = (props) => {
+export const Routes = () => {
     return (
         <Switch>
             <Route path={URL_INDEX} exact><Redirect from={URL_INDEX} to={URL_CHAT}/></Route>
-            <RequiresAuthenticatedUserRoute path={URL_CHAT} component={ChatView} user={props.user}/>
+            <RequiresAuthenticatedUserRoute path={URL_CHAT} component={ChatView}/>
             <Route path={URL_SECURITY_SIGNUP} component={SignUp}/>
             <Route path={URL_SECURITY_FORGOTPASSWORD} component={ForgotPasswordView}/>
             <Route path={URL_SECURITY_LOGIN} component={LogInView}/>
-            <RequiresAuthenticatedUserRoute path={URL_SECURITY_LOGOUT} component={LogOutView} user={props.user}/>
+            <RequiresAuthenticatedUserRoute path={URL_SECURITY_LOGOUT} component={LogOutView}/>
             <Route path="*" component={Error404View}/>
         </Switch>
     );
